@@ -133,18 +133,18 @@ class ComputeLoss:
                 pxy = ps[:, :2].sigmoid() * 2 - 0.5
                 pwh = (ps[:, 2:4].sigmoid() * 2) ** 2 * anchors[i]
                 pbox = torch.cat((pxy, pwh), 1)  # predicted box
-                # j = 2 in jiou
-                j = 2
+                # w = 2 in wiou
+                w = 2
                 if (self.loss_type=="giou"):
                     iou = bbox_iou(pbox.T, tbox[i], x1y1x2y2=False, GIoU=True)  # iou(prediction, target)
-                if (self.loss_type=="jgiou"):
-                    iou = bbox_iou(pbox.T, tbox[i], x1y1x2y2=False, GIoU=True, j=j)  # iou(prediction, target)
+                if (self.loss_type=="wgiou"):
+                    iou = bbox_iou(pbox.T, tbox[i], x1y1x2y2=False, GIoU=True, w=w)  # iou(prediction, target)
                 elif (self.loss_type=="diou"):
                     iou = bbox_iou(pbox.T, tbox[i], x1y1x2y2=False, DIoU=True)  # iou(prediction, target)
-                elif (self.loss_type=="jdiou"):
-                    iou = bbox_iou(pbox.T, tbox[i], x1y1x2y2=False, DIoU=True, j=j)  # iou(prediction, target)
-                if (self.loss_type=="jciou"):
-                    iou = bbox_iou(pbox.T, tbox[i], x1y1x2y2=False, CIoU=True, j=j)  # iou(prediction, target)
+                elif (self.loss_type=="wdiou"):
+                    iou = bbox_iou(pbox.T, tbox[i], x1y1x2y2=False, DIoU=True, w=w)  # iou(prediction, target)
+                if (self.loss_type=="wciou"):
+                    iou = bbox_iou(pbox.T, tbox[i], x1y1x2y2=False, CIoU=True, w=w)  # iou(prediction, target)
                 else: # default to ciou
                     iou = bbox_iou(pbox.T, tbox[i], x1y1x2y2=False, CIoU=True)  # iou(prediction, target)
                 lbox += (1.0 - iou).mean()  # iou loss
